@@ -6,6 +6,8 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useForm } from "react-hook-form";
 import z, { email } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "@/contexts/SessionContext";
+import { useEffect } from "react";
 
 const signInFormSchema = z.object({
   email: z.email("O e-mail é obrigatório").nonempty("Digite um e-mail válido"),
@@ -15,6 +17,7 @@ const signInFormSchema = z.object({
 type SignInFormData = z.infer<typeof signInFormSchema>;
 
 export default function Login() {
+    const { user , updateUser} = useSession();
 
     const { register, handleSubmit, formState: {errors} } = useForm({
       resolver: zodResolver(signInFormSchema)
@@ -22,7 +25,16 @@ export default function Login() {
 
     function handleSignIn(data: SignInFormData){
       console.log(data);
+      updateUser({id:"teste",
+        email: data.email,
+        cpf: "10680732926",
+        fullName: "Henrique Junkes",
+        avatarUrl: "https://avatars.githubusercontent.com/u/6463742?v=4"})
     }
+
+    useEffect(() => {
+      console.log(user);
+    }, [user])
 
     return (
         <Flex w="100vw" h="100vh">
